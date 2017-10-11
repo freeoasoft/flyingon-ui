@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>flyingon samples</title>
+    <link rel="shortcut icon" href="../favicon.ico"/>
+    <link rel="shortcut" href="../favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="../css/default/flyingon.css" />
+    <style type="text/css">
+
+    html, body {
+        margin:0;
+        border:0;
+        padding:0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .title {
+        font-size: 20px;
+        line-height: 40px;
+        margin-left: 8px;
+    }
+
+    pre code {
+        font: normal 10pt Consolas, Monaco, monospace;
+    }
+
+    </style>
+
+    <script type="text/javascript" src="../js/flyingon.js"></script>
+    <script type="text/javascript" src="../i18n/zh-CN.js"></script>
+    <script type="text/javascript" src="menu.zh-CN.js"></script>
+</head>
+<body>
+
+    <div id="host" style="width:100%;height:100%;overflow:hidden;">
+    </div>
+
+    <script type="text/x-template" id="template">
+        <Panel :layout="dock" height="100%">
+            <Panel dock="top" height="50" class="f-back" border="1">
+                <Label class="title" width="200" height="100%" text="flyingon-samples" />
+            </Panel>
+            <Panel dock="bottom" height="25" class="f-back" border="1">
+            </Panel>
+            <Tree id="menu" dock="left" width="200" max-width="300" />
+            <Splitter dock="left" />
+            <Tab id="host" dock="fill" size="100" selected='0'>
+            </Tab>
+        </Panel>
+    </script>
+
+    <script type="text/javascript">
+
+
+
+        //代码插件(显示当前插件代码)
+        flyingon.GroupBox.extend('Code', function (base) {
+
+
+            this.init = function () {
+
+                this.margin('8 0 0 0').collapsable(2).layout('fill').text('插件代码');
+                this.push({ Class: 'Highlight' });
+                
+                load_code(this);
+            };
+
+
+            this.defaultValue('width', 780);
+
+            this.defaultHeight = 200;
+
+
+            this.defineProperty('language', 'javascript', {
+
+                set: function (name, value) {
+
+                    this[0].language(value);
+                }
+            });
+
+
+            function load_code(self) {
+
+                var path = location.hash.replace(/^[#!]*/, '');
+
+                path = flyingon.require.path(path);
+                
+                flyingon.ajax(path).done(function (text) {
+
+                    self[0].code(text);
+                });
+            };
+
+            
+        }).register();
+
+
+
+        var host = flyingon.view({
+            
+            host: 'host',
+
+            template: '#template',
+
+            defaults: {
+                
+                dock: { type: 'dock', spacingX: 0, spacingY: -2 }
+            },
+
+            created: function (vm) {
+
+
+                var menu = this.findById('menu')[0];
+
+                var host = this.findById('host')[0];
+
+
+                //加载树数据
+                menu.push.apply(menu, menuList);
+
+                menu.theme('line');
+                menu.expandTo(2); //展开第2级
+
+                menu.on('node-click', function (event) {
+
+                    var node = event.node;
+                    open_plugin(node, node.get('url'), false);
+                });
+
+
+                //侦听路由地址变化
+                flyingon.route.listen(function (url) {
+
+                    //根据url查找树节点
+                    var node = url && menu.findNode(function (node) {
+
+                        var any = node.get('url');
+                        
+                        if (any === url)
+                        {
+                            return node;
+                        }
+
+                        if (url.indexOf(any) === 0)
+                        {
+                            //节点url与原始url不同则同步(多级路由时可能会不同)
+                            node.set('url', url);
+                            return node;
+                        }
+                    });
+
+                    if (node)
+                    {
+                        open_plugin(node, url);
+                    }
+                    else if (url)
+                    {
+                        alert('url: ' + url + ' not exist!');
+                    }
+                    else
+                    {
+                        menu.current(null);
+                    }
+                });
+
+
+                //打开指定节点对应的插件页
+                function open_plugin(node, url, current) {
+
+                    var any;
+
+                    if (node && node.length <= 0)
+                    {
+                        //路由到节点对应的插件
+                        flyingon.route(host, url, {
+        
+                            text: any = node.text(),
+                            target: any //text作为打开的key,用户可根据实际情况设置
+                        });
+
+                        //设置当前树节点
+                        if (current !== false)
+                        {
+                            menu.current(node);
+                            menu.scrollTo(node);
+                        }
+                    }
+                };
+
+
+            }
+
+
+        });
+
+
+        //窗口变化时自动调整内容
+        flyingon.dom_on(window, 'resize', function () {
+
+            host.invalidate();
+        });
+  
+
+    </script>
+
+</body>
+</html>
