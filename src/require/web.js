@@ -22,12 +22,12 @@
     
 
     //设置相对起始目录
-    //如果当前js路径包含"flyingon/",则取此上级目录
-    //否则取要目录
+    //如果当前js路径包含"flyingon-ui/",则取此上级目录
+    //否则取根目录的下级目录
     require.__base_path = (function () {
         
         var url = flyingon.__script_src() || flyingon.absoluteUrl(''),
-            index = url.indexOf('flyingon/');
+            index = url.indexOf('flyingon-ui/');
 
         if (index >= 0)
         {

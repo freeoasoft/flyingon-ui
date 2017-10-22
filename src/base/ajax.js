@@ -1,6 +1,9 @@
 //Ajax类
 flyingon.Ajax = flyingon.Async.extend(function () {
 
+
+    //plus.net 兼容HTML5+
+    var XMLHttpRequest = window.plus && plus.net && plus.net.XMLHttpRequest || window.XMLHttpRequest;
     
     
     //请求的url

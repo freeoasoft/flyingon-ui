@@ -1,3 +1,7 @@
-.*/*
-/node_modules/*
-/coverage/*
+.vscode/*
+.project
+/web/node_modules/*
+/web/coverage/*
+/mobile/node_modules/*
+/mobile/coverage/*
+/unpackage/*
