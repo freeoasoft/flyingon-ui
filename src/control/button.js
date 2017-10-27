@@ -86,11 +86,14 @@ flyingon.Control.extend('Button', function (base) {
 
         
     //测量自动大小
-    this.onmeasure = function (auto) {
+    this.onmeasure = function () {
         
-        if (auto)
+        var autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
+
+        if (autoWidth || autoHeight)
         {
-            this.renderer.__measure_auto(this, auto);
+            this.renderer.__measure_auto(this, autoWidth, autoHeight);
         }
         else
         {

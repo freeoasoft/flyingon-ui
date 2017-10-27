@@ -15,7 +15,7 @@ flyingon.Panel.extend('Pagination', function (base) {
         { Class: 'Separator' },
         { Class: 'Icon', icon: 'f-page-first', tag: 'first' },
         { Class: 'Icon', icon: 'f-page-previous', tag: 'previous' },
-        { Class: 'TextBox', className: 'f-page-current', tag: 'current', width: 40, value: 0, style: 'text-align:center' },
+        { Class: 'TextBox', className: 'f-page-current', tag: 'current', width: 40, value: 0, textAlign: 'center' },
         { Class: 'Label', width: 10, text: '/' },
         { Class: 'Label', className: 'f-page-pages', tag: 'pages', width: 'auto', text: 0 },
         { Class: 'Icon', icon: 'f-page-next', tag: 'next' },

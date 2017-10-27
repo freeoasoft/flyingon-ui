@@ -55,7 +55,7 @@ flyingon.Panel.extend('TabPage', function (base) {
 
 
 
-flyingon.Control.extend('Tab', function (base) {
+flyingon.Panel.extend('Tab', function (base) {
 
 
 
@@ -80,7 +80,7 @@ flyingon.Control.extend('Tab', function (base) {
 
         set: function (name, value) {
 
-            this.view && this.renderer.set(this, name, value);
+            this.view && this.renderer.patch(this, name, value);
         }
     });
 
@@ -89,13 +89,13 @@ flyingon.Control.extend('Tab', function (base) {
     function render1(name, value) {
 
         this.__reset_header = true;
-        this.__update_dirty || this.invalidate();
+        this.__update_dirty < 2 && this.__arrange_delay(2);
     };
 
 
     function render2(name, value) {
 
-        this.__update_dirty || this.invalidate();
+        this.__update_dirty < 2 && this.__arrange_delay(2);
     };
 
 
@@ -205,7 +205,7 @@ flyingon.Control.extend('Tab', function (base) {
                     page.renderer.selected(page, true);
                 }
 
-                this.view && this.renderer.set(this, 'selected', page, 'tag', tag);
+                this.view && this.renderer.patch(this, 'selected', page, 'tag', tag);
 
                 any = this.indexOf(page);
             }
@@ -231,7 +231,7 @@ flyingon.Control.extend('Tab', function (base) {
 
 
     //扩展容器功能
-    flyingon.fragment('f-container', this, base, flyingon.TabPage, true);
+    flyingon.fragment('f-container', this, base, flyingon.TabPage);
 
 
     var remove_items = this.__remove_items;

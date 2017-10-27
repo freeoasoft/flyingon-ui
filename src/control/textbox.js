@@ -1,7 +1,10 @@
 flyingon.fragment('f-TextBox', function () {
 
 
-    this.defaultWidth = 200;
+    this.defaultWidth = 150;
+
+    this.defaultHeight = 25;
+    
 
 
     //是否只读

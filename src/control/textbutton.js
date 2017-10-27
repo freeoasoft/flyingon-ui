@@ -70,7 +70,7 @@ flyingon.Control.extend('TextButton', function (base) {
     this.__set_data = function (list) {
 
         this.__data_list = list;
-        this.renderer.set(this, 'value');
+        this.renderer.patch(this, 'value');
     };
 
 

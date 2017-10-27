@@ -3,11 +3,11 @@ flyingon.fragment('f-ComboTree', function () {
 
 
     //下拉框宽度
-    this['popup-width'] = this.defineProperty('popupWidth', 'default');
+    this['popup-width'] = this.defineProperty('popupWidth', '');
 
 
     //下拉框高度
-    this['popup-height'] = this.defineProperty('popupHeight', 'default');
+    this['popup-height'] = this.defineProperty('popupHeight', '');
 
 
     //树风格
@@ -15,7 +15,7 @@ flyingon.fragment('f-ComboTree', function () {
     //blue      蓝色风格
     //plus      加减风格
     //line      线条风格
-    this.defineProperty('theme', 'default');
+    this.defineProperty('theme', '');
 
 
     //是否显示检查框

@@ -14,7 +14,7 @@ flyingon.Control.extend('ListBox', function (base) {
     function render() {
 
         this.__template = null;
-        this.__data_list && this.renderer.set(this, 'content');
+        this.__data_list && this.renderer.patch(this, 'update');
     };
 
 
@@ -74,7 +74,7 @@ flyingon.Control.extend('ListBox', function (base) {
     function set_list(list) {
 
         this.__data_list = list;
-        this.renderer.set(this, 'content');
+        this.renderer.patch(this, 'update');
     };
 
 

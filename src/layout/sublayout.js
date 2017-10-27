@@ -28,18 +28,21 @@ flyingon.Sublayout = flyingon.Control.extend(function (base) {
     
         
     
-    this.onmeasure = function (auto) {
+    this.onmeasure = function () {
+
+        var autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
 
         flyingon.arrange(this, this.__children, false, false, true);
         
-        if (auto)
+        if (autoWidth || autoHeight)
         {
-            if (auto & 1)
+            if (autoWidth)
             {
                 this.offsetWidth = this.arrangeRight + this.borderLeft + this.borderRight;
             }
             
-            if (auto & 2)
+            if (autoHeight)
             {
                 this.offsetHeight = this.arrangeBottom + this.borderTop + this.borderBottom;
             }

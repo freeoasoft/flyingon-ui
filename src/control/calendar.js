@@ -11,11 +11,18 @@ flyingon.Control.extend('Calendar', function (base) {
     this.defaultValue('padding', 8);
 
 
+    
     function render() {
 
-        if (this.view && !this.__location_dirty)
+        var patch = this.__view_patch;
+
+        if (patch)
         {
-            this.renderer.set(this, 'refresh');
+            patch.update = true;
+        }
+        else
+        {
+            this.renderer.patch(this, 'update', true);
         }
     };
 

@@ -11,8 +11,16 @@ flyingon.Panel.extend('GroupBox', function (base) {
 
         set: function (name, value) {
             
-            this.view && this.renderer.set(this, name, value);
-            this.__update_dirty || this.invalidate();
+            var any;
+
+            this.view && this.renderer.patch(this, name, value);
+
+            any = this.parent || this;
+
+            if (any.__update_dirty < 2)
+            {
+                any.__arrange_delay(2);
+            }
         }
     });
 
@@ -54,14 +62,21 @@ flyingon.Panel.extend('GroupBox', function (base) {
 
         set: function (name, value) {
 
-            this.view && this.renderer.set(this, name, value);
+            var any;
+
+            this.view && this.renderer.patch(this, name, value);
 
             if (!value && (value = this.mutex()))
             {
                 this.__do_mutex(value);
             }
 
-            this.__update_dirty || this.invalidate();
+            any = this.parent || this;
+
+            if (any.__update_dirty < 2)
+            {
+                any.__arrange_delay(2);
+            }
         }
     });
 
@@ -89,22 +104,26 @@ flyingon.Panel.extend('GroupBox', function (base) {
 
 
     //测量自动大小
-    this.onmeasure = function (auto) {
+    this.onmeasure = function () {
         
         if (this.collapsed())
         {
-            this.offsetHeight = this.header();
-            return false;
-        }
-        
-        if (auto)
-        {
-            base.onmeasure.call(this, auto);
-            this.offsetHeight += this.header();
+            this.offsetHeight = this.header() + 1;
         }
         else
         {
-            return false;
+            var autoWidth = this.__auto_width,
+                autoHeight = this.__auto_height;
+
+            if (autoWidth || autoHeight)
+            {
+                base.onmeasure.call(this);
+                this.offsetHeight += this.header();
+            }
+            else
+            {
+                return false;
+            }
         }
     };
 

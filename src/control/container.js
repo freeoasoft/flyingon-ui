@@ -1,33 +1,15 @@
 //集合功能扩展
-flyingon.fragment('f-container', function (base, childrenClass, arrange) {
+flyingon.fragment('f-container', function (base, childrenClass) {
 
-
-
-    if (childrenClass === true)
-    {
-        childrenClass = null;
-        arrange = true;
-    }
 
 
     //子控件类
     this.childrenClass = childrenClass || flyingon.Control;
 
 
-    //是否需要排列
-    this.__arrange_dirty = arrange ? 2 : 0;
-
-
 
     flyingon.fragment('f-collection', this);
 
-
-    this.__check_error = function (Class) {
-
-        throw '"' + this.Class.fullName + '" type can push "' + Class.fullName + '" type only!';
-    };
-
-  
 
     //分离子控件(不销毁)
     this.detach = function (index, length) {
@@ -52,12 +34,23 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
     };
 
 
+
+    this.__check_error = function (Class) {
+
+        throw '"' + this.Class.fullName + '" type can push "' + Class.fullName + '" type only!';
+    };
+
+
+    //创建控件方法
+    this.__create_child = flyingon.ui;
+
+
     //添加子项前检测处理
     this.__check_items = function (index, items, start) {
 
         var Class = this.childrenClass,
-            html = this instanceof flyingon.HtmlElement,
             patch = this.__content_render && [],
+            locate = this.__locate_host,
             item,
             any;
 
@@ -67,7 +60,7 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
             {
                 if (item instanceof Class)
                 {
-                    if ((any = item.parent) && any !== this)
+                    if (any = item.parent)
                     {
                         any.__remove_items(any.indexOf(item), [item]);
                     }
@@ -87,7 +80,14 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
             }
 
             item.parent = this;
-            item.__as_html = html;
+
+            //标记是否定位
+            item.__is_locate = locate;
+
+            if (any = item.onparentchanged)
+            {
+                any.call(item, this);
+            }
 
             if (patch)
             {
@@ -97,38 +97,34 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
             start++;
         }
 
-        this.__all && this.__clear_all();
-
         if (patch && patch[0])
         {
             this.__children_dirty(1, index, patch);
         }
 
-        if (arrange && this.__arrange_dirty < 2)
-        {
-            this.__arrange_delay(2);
-        }
+        this.__update_dirty < 2 && this.__arrange_delay(2);
     };
-
-
-    //创建控件方法
-    this.__create_child = flyingon.ui;
 
 
     //移除多个子项
     this.__remove_items = function (index, items) {
 
         var patch = [],
-            item;
-
-        this.__all && this.__clear_all();
+            item,
+            any;
 
         for (var i = items.length - 1; i >= 0; i--)
         {
             if (item = items[i])
             {
+                if (any = item.onparentchanged)
+                {
+                    any.call(item, null);
+                }
+
                 item.parent = null;
                 item.autoDispose = true;
+                item.__is_locate = false;
 
                 patch.push(item);
             }
@@ -140,10 +136,7 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
             this.__children_dirty(2, -1, patch);
         }
 
-        if (arrange && this.__arrange_dirty < 2)
-        {
-            this.__arrange_delay(2);
-        }
+        this.__update_dirty < 2 && this.__arrange_delay(2);
     };
 
 
@@ -176,17 +169,25 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
 
 
 
-    //清除all缓存
-    this.__clear_all = function () {
+    //默认不处理排列
+    this.__update_dirty = 2;
 
-        var any = this.parent;
 
-        this.__all = null;
+    //启用延时排列
+    this.__arrange_delay = function (dirty) {
 
-        while (any && any.__all)
+        var parent = this.parent;
+
+        this.__update_dirty = dirty;
+
+        if (parent)
         {
-            any.__all = null;
-            any = any.parent;
+            dirty = this.__auto_width || this.__auto_height ? 2 : 1;
+
+            if (parent.__update_dirty < dirty)
+            {
+                parent.__arrange_delay(dirty);
+            }
         }
     };
 
@@ -248,25 +249,21 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
 
 
     //获取所有子控件
-    this.all = function () {
+    this.all = function (list) {
 
-        return this.__all || (this.__all = all(this, []));
-    };
+        var item;
 
+        list = list || [];
 
-    function all(self, list) {
-
-        var item, any;
-
-        for (var i = 0, l = self.length; i < l; i++)
+        for (var i = 0, l = this.length; i < l; i++)
         {
-            if (item = self[i])
+            if (item = this[i])
             {
                 list.push(item);
 
-                if (any = item.all)
+                if (item.length > 0)
                 {
-                    list.push.apply(list, any.call(item));
+                    item.all(list);
                 }
             }
         }
@@ -275,66 +272,47 @@ flyingon.fragment('f-container', function (base, childrenClass, arrange) {
     };
 
 
-    
-    //查找拖拉放置目标及位置
-    this.findDropTarget = function (x, y) {
-        
-        var control = this.findAt(x, y);
 
-        if (control)
-        {
-            //
+    //如果子项是控件则生成检验和数据变更处理方法
+    if (!childrenClass || childrenClass.prototype instanceof flyingon.Control)
+    {
+
+        //排列时生成校验方法
+        this.__validate = function (errors, show) {
+
+            var item, fn;
+
+            for (var i = 0, l = this.length; i < l; i++)
+            {
+                if ((item = this[i]) && (fn = item.__validate))
+                {
+                    fn.call(item, errors, show);
+                }
+            }
+        };
+        
+    
+
+        //接收数据集变更动作处理
+        this.subscribeBind = function (dataset, action) {
             
-            return [this, control];
-        }
-        
-        return [this, null];
-    };
-    
-    
-    
-    //查找指定坐标的子控件
-    this.findAt = function (x, y) {
-      
-        return this;
-    };
+            var item;
+            
+            base && base.subscribeBind.call(this, dataset, action);
 
-
-
-    //排列时生成校验方法
-    arrange && (this.__validate = function (errors, show) {
-
-        var item, fn;
-
-        for (var i = 0, l = this.length; i < l; i++)
-        {
-            if ((item = this[i]) && (fn = item.__validate))
+            //向下派发
+            for (var i = 0, l = this.length; i < l; i++)
             {
-                fn.call(item, errors, show);
+                if ((item = this[i]) && !item.__dataset)
+                {
+                    item.subscribeBind(dataset, action);
+                }
             }
-        }
-    });
-    
-  
-
-    //接收数据集变更动作处理
-    this.subscribeBind = function (dataset, action) {
+            
+            return this;
+        };
         
-        var item;
-        
-        base && base.subscribeBind.call(this, dataset, action);
-
-        //向下派发
-        for (var i = 0, l = this.length; i < l; i++)
-        {
-            if ((item = this[i]) && !item.__dataset)
-            {
-                item.subscribeBind(dataset, action);
-            }
-        }
-        
-        return this;
-    };
+    }
 
 
 

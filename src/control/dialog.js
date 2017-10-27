@@ -19,8 +19,6 @@ flyingon.Panel.extend('Dialog', function (base) {
 
     this.defaultValue('padding', 2);
 
-    this.defaultValue('movable', true);
-
 
 
     //头部高度        
@@ -28,8 +26,8 @@ flyingon.Panel.extend('Dialog', function (base) {
 
         set: function (name, value) {
 
-            this.view && this.renderer.set(this, name, value);
-            this.__update_dirty || this.invalidate();
+            this.view && this.renderer.patch(this, name, value);
+            this.__update_dirty < 2 && this.__arrange_delay(2);
         }
     });
 
@@ -57,13 +55,16 @@ flyingon.Panel.extend('Dialog', function (base) {
 
 
     //测量自动大小
-    this.onmeasure = function (auto) {
+    this.onmeasure = function () {
         
-        if (auto)
-        {
-            base.onmeasure.call(this, auto);
+        var autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
 
-            if (auto & 2)
+        if (autoWidth || autoHeight)
+        {
+            base.onmeasure.call(this);
+
+            if (autoHeight)
             {
                 this.offsetHeight += this.header();
             }

@@ -7,19 +7,15 @@ flyingon.Control.extend('Panel', function (base) {
 
 
 
-    
+    var Panel = flyingon.Panel;
+
+
+
     //重写默认宽度
     this.defaultWidth = 300;
     
     //重写默认高度
     this.defaultHeight = 150;
-
-        
-
-    //排列区域
-    this.arrangeLeft = this.arrangeTop = 
-    this.arrangeRight = this.arrangeBottom = 
-    this.arrangeWidth = this.arrangeHeight = 0;
 
 
 
@@ -31,49 +27,96 @@ flyingon.Control.extend('Panel', function (base) {
     //当前布局
     this.defineProperty('layout', null, {
      
-        group: 'locate',
-        query: true,
-
+        group: 'layout',
         set: function (name, value) {
 
             this.__layout = null;
-            this.__arrent_dirty < 2 && this.__arrange_delay(2);
+            this.view && this.renderer.layout(this, value);
         }
     });
 
-
-    //作为html布局时是否需要适应容器
-    this.defineProperty('adaption', false);
-    
     
 
     //扩展容器功能
-    flyingon.fragment('f-container', this, base, true);
+    flyingon.fragment('f-container', this, base);
 
 
 
+    //是否定位宿主
+    this.__locate_host = true;
+    
+    
+    //使布局无效
+    this.update = function () {
+
+        var parent = this.parent;
+
+        this.__update_dirty = 2;
+
+        if (parent)
+        {            
+            var dirty = this.__auto_width || this.__auto_height ? 2 : 1;
+
+            if (parent.__update_dirty < dirty)
+            {
+                parent.__arrange_delay(dirty);
+            }
+        }
+        else if (this.__top_control)
+        {
+            flyingon.__update_delay(this);
+        }
+
+        return this;
+    };
+
+
+    //启用延时排列
+    this.__arrange_delay = function (dirty) {
+
+        var parent = this.parent;
+
+        this.__update_dirty = dirty;
+
+        if (parent)
+        {
+            dirty = this.__auto_width || this.__auto_height ? 2 : 1;
+
+            if (parent.__update_dirty < dirty)
+            {
+                parent.__arrange_delay(dirty);
+            }
+        }
+        else if (this.__top_control)
+        {
+            flyingon.__update_delay(this);
+        }
+    };
+
+    
     //测量自动大小
-    this.onmeasure = function (auto) {
+    this.onmeasure = function () {
         
-        var tag = (this.offsetHeight << 16) + this.offsetWidth;
+        var tag = (this.offsetHeight << 16) + this.offsetWidth,
+            autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
 
         if (this.__size_tag !== tag)
         {
             this.__size_tag = tag;
-            this.__arrange_dirty = 2;
+            this.__update_dirty = 2;
         }
 
-        if (auto)
+        if (autoWidth || autoHeight)
         {
             this.renderer.locate(this);
-            this.__update_dirty = false;
 
-            if (auto & 1)
+            if (autoWidth)
             {
                 this.offsetWidth = this.arrangeRight + this.borderLeft + this.borderRight;
             }
             
-            if (auto & 2)
+            if (autoHeight)
             {
                 this.offsetHeight = this.arrangeBottom + this.borderTop + this.borderBottom;
             }
@@ -83,31 +126,15 @@ flyingon.Control.extend('Panel', function (base) {
             return false;
         }
     };
-    
-        
-    
-    //查找指定坐标的子控件
-    this.findAt = function (x, y) {
-      
-        if (this.length <= 0)
+
+
+    this.onparentchanged = function (parent) {
+
+        if (parent && !(parent instanceof Panel))
         {
-            return this;
+            throw 'Panel can only be used as the child node of Panel';
         }
-
-        var layout = flyingon.getLayout(this),
-            any;
-    
-        x += this.scrollLeft - this.borderLeft;
-        y += this.scrollTop - this.borderTop;
-
-        if (any = layout.__sublayouts)
-        {
-            return (any = layout.controlAt(any, x, y)) ? any.controlAt(x, y) : null;
-        }
-
-        return layout.controlAt(this, x, y);
-    };    
-
+    };
 
 
 }).register();

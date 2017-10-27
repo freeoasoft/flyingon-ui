@@ -46,13 +46,13 @@ Object.extend('TreeNode', function () {
                 if (!(value ? parent.checkedChildren++ : --parent.checkedChildren) && 
                     parent.view && !parent.checked())
                 {
-                    parent.renderer.set(parent, name, false);
+                    parent.renderer.patch(parent, name, false);
                 }
 
                 parent = parent.parent;
             }
 
-            this.view && this.renderer.set(this, name, value);
+            this.view && this.renderer.patch(this, name, value);
             this.trigger('checked-change', 'value', value);
         }
     });
@@ -215,7 +215,7 @@ flyingon.Control.extend('Tree', function (base) {
         if (!node.expanded && this.trigger('expand', 'node', node) !== false)
         {
             node.expanded = true;
-            node.view && node.renderer.set(node, 'expand');
+            node.view && node.renderer.patch(node, 'expand');
         }
     };
 
@@ -250,7 +250,7 @@ flyingon.Control.extend('Tree', function (base) {
                 }
 
                 node.expanded = true;
-                node.view && node.renderer.set(node, 'expand');
+                node.view && node.renderer.patch(node, 'expand');
             }
 
             if (node.length > 0)
@@ -269,7 +269,7 @@ flyingon.Control.extend('Tree', function (base) {
                         if (item.expanded && this.trigger('collapse', 'node', node) !== false)
                         {
                             item.expanded = false;
-                            item.view && item.renderer.set(item, 'collapse');
+                            item.view && item.renderer.patch(item, 'collapse');
                         }
                     }
                 }
@@ -303,7 +303,7 @@ flyingon.Control.extend('Tree', function (base) {
         if (node.expanded && node.length > 0 && this.trigger('collapse', 'node', node) !== false)
         {
             node.expanded = false;
-            node.view && node.renderer.set(node, 'collapse');
+            node.view && node.renderer.patch(node, 'collapse');
         }
     };
 
@@ -375,17 +375,17 @@ flyingon.Control.extend('Tree', function (base) {
 
     this.current = function (node, expand) {
 
-        var current = this.__current,
+        var last = this.__current,
             any;
 
         if (node === void 0)
         {
-            return current;
+            return last;
         }
         
-        if (current !== node)
+        if (last !== node)
         {
-            current && (current.__current = false);
+            last && (last.__current = false);
             
             if (this.__current = node)
             {
@@ -413,7 +413,10 @@ flyingon.Control.extend('Tree', function (base) {
 
         if (this.view)
         {
-            current && current.renderer.current(current, false);
+            if (last && last.view)
+            {
+                last.renderer.current(last, false);
+            }
 
             if (node)
             {
@@ -427,7 +430,7 @@ flyingon.Control.extend('Tree', function (base) {
                     {
                         if (any.isTreeNode)
                         {
-                            any.renderer.set(any, 'expand');
+                            any.renderer.patch(any, 'expand');
                             any = any.parent;
                         }
                         else

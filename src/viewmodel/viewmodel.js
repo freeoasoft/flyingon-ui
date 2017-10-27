@@ -65,8 +65,10 @@
             }
             else
             {
-                control = new unkown();
-                control.tagName = control;
+                any = new unkown();
+                any.tagName = control;
+                
+                control = any;
             }
         }
 
@@ -1263,8 +1265,8 @@
                 vm.$update(false);
             }
 
-            parent.renderer.set(parent, '__view_order');
-            parent.invalidate();
+            parent.renderer.patch(parent, '__view_order');
+            parent.__arrange_delay(2);
         }
     };
 

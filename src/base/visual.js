@@ -146,7 +146,7 @@ flyingon.fragment('f-visual', function () {
 
         var fn, any;
 
-        if (name && (any = name.indexOf(':')) > 0) //class: or style:
+        if (name && (any = name.indexOf(':')) > 0) //class
         {
             if (fn = this[name.substring(0, ++any)])
             {
@@ -191,7 +191,7 @@ flyingon.fragment('f-visual', function () {
                 }
                 else
                 {
-                    this.renderer.set(this, name, value);
+                    this.renderer.patch(this, name, value);
                 }
             }
         }
@@ -242,7 +242,7 @@ flyingon.fragment('f-visual', function () {
                 }
                 else
                 {
-                    this.renderer.set(this, name, value);
+                    this.renderer.patch(this, name, value);
                 }
             }
         }
@@ -269,7 +269,7 @@ flyingon.fragment('f-visual', function () {
                 }
                 else
                 {
-                    this.renderer.set(this, name, value);
+                    this.renderer.patch(this, name, value);
                 }
             }
         }

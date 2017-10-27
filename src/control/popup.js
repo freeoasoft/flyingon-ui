@@ -14,6 +14,8 @@ flyingon.Panel.extend('Popup', function () {
     //设置为顶级控件
     this.__top_control = true;
 
+    this.__auto_width = this.__auto_height = true;
+
 
     //弹出层是否已显示
     this.shown = false;

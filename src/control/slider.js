@@ -15,10 +15,7 @@ flyingon.Control.extend('Slider', function (base) {
 
             set: function () {
 
-                if (this.view && !this.__location_dirty)
-                {
-                    this.renderer.set(this, 'refresh');
-                }
+                this.view && this.renderer.patch(this, 'refresh');
             }
         });
     };

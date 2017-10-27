@@ -1,6 +1,7 @@
 flyingon.HtmlElement = flyingon.Control.extend(function (base) {
 
 
+    
     this.tagName = 'div';
 
 
@@ -10,7 +11,7 @@ flyingon.HtmlElement = flyingon.Control.extend(function (base) {
         set: function (name, value) {
 
             this.length > 0 && this.splice(0);
-            this.renderer.set(this, name, value);
+            this.renderer.patch(this, name, value);
         }
     });
 
@@ -25,24 +26,19 @@ flyingon.HtmlElement = flyingon.Control.extend(function (base) {
     
 
     //扩展容器功能
-    flyingon.fragment('f-container', this, base, true);
+    flyingon.fragment('f-container', this, base);
 
 
 
     //测量自动大小
-    this.onmeasure = function (auto) {
-        
-        var tag = (this.offsetHeight << 16) + this.offsetWidth;
+    this.onmeasure = function () {
 
-        if (this.__size_tag !== tag)
-        {
-            this.__size_tag = tag;
-            this.__arrange_dirty = 2;
-        }
+        var autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
 
-        if (auto)
+        if (autoWidth || autoHeight)
         {
-            this.renderer.__measure_auto(this, auto);
+            this.renderer.__measure_auto(this, autoWidth, autoHeight);
         }
         else
         {

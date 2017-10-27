@@ -173,7 +173,7 @@ flyingon.fragment('f-validate', function () {
 
             if (any && any.__validate_box && any.view && (any = any.__find_title()))
             {
-                any.renderer.set(any, name, value);
+                any.renderer.patch(any, name, value);
             }
         }
     });

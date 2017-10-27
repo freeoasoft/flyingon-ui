@@ -124,7 +124,7 @@
         set: function (name, value) {
 
             this.__readonly = value;
-            this.view && this.renderer.set(this, name, value);
+            this.view && this.renderer.patch(this, name, value);
         }
     });
 
@@ -1216,7 +1216,7 @@ flyingon.GridRow = Object.extend._(function () {
                 rows.splice(rows.indexOf(this), 1);
             }
 
-            this.view && this.renderer.set(this, 'checked', this.__checked = checked);
+            this.view && this.renderer.patch(this, 'checked', this.__checked = checked);
         }
     };
 
@@ -1956,12 +1956,12 @@ flyingon.Control.extend('Grid', function (base) {
             
             if (value > 0)
             {
-                this.renderer.set(this, '__render_group');
+                this.renderer.patch(this, '__render_group', true);
             }
 
             if (this.view)
             {
-                this.renderer.set(this, 'header', 1);
+                this.renderer.patch(this, 'header', 1);
                 this.update();
             }
         }
@@ -1975,7 +1975,7 @@ flyingon.Control.extend('Grid', function (base) {
 
             if (this.view)
             {
-                this.renderer.set(this, name, 2);
+                this.renderer.patch(this, name, 2);
                 this.update();
             }
         }
@@ -1989,7 +1989,7 @@ flyingon.Control.extend('Grid', function (base) {
 
             if (this.view)
             {
-                this.renderer.set(this, name, value);
+                this.renderer.patch(this, name, value);
                 this.update();
             }
         }
@@ -2041,7 +2041,7 @@ flyingon.Control.extend('Grid', function (base) {
 
             this.trigger(value ? 'group' : 'ungroup');
 
-            this.renderer.set(this, '__render_group');
+            this.renderer.patch(this, '__render_group', true);
             this.view && this.update(true);
         }
     });
@@ -2345,8 +2345,8 @@ flyingon.Control.extend('Grid', function (base) {
 
             if (this.view)
             {
-                any && any.renderer.set(any, 'current', any.__current = false);
-                row && row.renderer.set(row, 'current', row.__current = true);
+                any && any.renderer.patch(any, 'current', any.__current = false);
+                row && row.renderer.patch(row, 'current', row.__current = true);
             }
 
             if (sync !== false && (any = this.__dataset))
@@ -2431,19 +2431,20 @@ flyingon.Control.extend('Grid', function (base) {
     //刷新表格
     this.update = function (change) {
 
-        if (this.view)
+        var patch = this.__view_patch;
+
+        if (change)
         {
-            var patch = this.__view_patch;
+            this.__column_dirty = true;
+        }
 
-            if (change)
-            {
-                this.__column_dirty = true;
-            }
-
-            if (!patch || !patch.show)
-            {
-                this.renderer.set(this, 'show', true);
-            }
+        if (patch)
+        {
+            patch.update = true;
+        }
+        else
+        {
+            this.renderer.patch(this, 'update', true);
         }
 
         return this;
@@ -2483,9 +2484,12 @@ flyingon.Control.extend('Grid', function (base) {
 
 
     //测量自动大小
-    this.onmeasure = function (auto) {
+    this.onmeasure = function () {
         
-        if (auto)
+        var autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
+
+        if (autoWidth || autoHeight)
         {
             var storage = this.__storage || this.__defaults,
                 x,
@@ -2499,9 +2503,9 @@ flyingon.Control.extend('Grid', function (base) {
             y += storage.header + storage.group;
             y += this.borderTop + this.borderBottom;
 
-            if (auto & 2)
+            if (autoHeight)
             {
-                this.offsetHeight = y + (!(auto & 1) && this.offsetWidth < x ? flyingon.hscroll_height : 0);
+                this.offsetHeight = y + (!autoWidth && this.offsetWidth < x ? flyingon.hscroll_height : 0);
                 y = false;
             }
             else
@@ -2509,7 +2513,7 @@ flyingon.Control.extend('Grid', function (base) {
                 y = y > this.offsetHeight;
             }
 
-            if (auto & 1)
+            if (autoWidth)
             {
                 this.offsetWidth = x + (y ? flyingon.vscroll_width : 0);
             }

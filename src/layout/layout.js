@@ -179,7 +179,7 @@ flyingon.Layout = Object.extend(function () {
     //排列容器控件
     flyingon.arrange = function (container, items, hscroll, vscroll, sublayout) {
         
-        var auto = container.__auto_size & 2, 
+        var auto = container.__auto_height, 
             any;
 
         //计算排列区域

@@ -32,7 +32,7 @@ flyingon.fragment('f-ComboBox', function () {
 
 
     //下拉框宽度
-    this['popup-width'] = this.defineProperty('popupWidth', 'default');
+    this['popup-width'] = this.defineProperty('popupWidth', '');
 
 
     //最大显示项数量
@@ -107,7 +107,7 @@ flyingon.TextButton.extend('ComboBox', function (base) {
             .itemHeight(height)
             .width(storage.popupWidth)
             .separator(storage.separator)
-            .items(data)
+            .items(data || [])
             .value(storage.value);
 
         if (columns > 0)

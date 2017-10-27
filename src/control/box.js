@@ -2,16 +2,14 @@ flyingon.Control.extend('Box', function (base) {
 
 
 
-    this.defaultWidth = 300;
+    this.defaultWidth = 200;
 
 
-    this.defaultHeight = 33;
+    this.defaultHeight = 30;
 
 
     this.defaultValue('padding', 4);
 
-
-    this.defaultValue('height', 'auto');
 
 
 
@@ -24,29 +22,31 @@ flyingon.Control.extend('Box', function (base) {
     this.defineProperty('vertical', false);
 
 
-    //作为html布局时是否需要适应容器
-    this.defineProperty('adaption', false);
-
-    
 
     //扩展容器功能
-    flyingon.fragment('f-container', this, base, true);
+    flyingon.fragment('f-container', this, base);
+
 
 
 
     //设置或清除检验信息
     this.__set_validate = function (error, control) {
 
-        var target = this.__find_error();
+        var any = this.__find_error();
 
-        if (target)
+        if (any)
         {
-            target.__validate_text = error ? error.text : '';
-            target.visible(!!error);
+            any.__validate_text = error ? error.text : '';
+            any.visible(!!error);
 
-            if (error && !target.__no_text)
+            if (error && !any.__no_text)
             {
-                target.renderer.set(target, 'text', error.text);
+                any.renderer.patch(any, 'text', error.text);
+            }
+
+            if ((any = this.parent) && any.__update_dirty < 2)
+            {
+                any.__arrange_delay(2);
             }
         }
         else if (control)
@@ -97,37 +97,14 @@ flyingon.Control.extend('Box', function (base) {
 
 
     //测量自动大小
-    this.onmeasure = function (auto) {
-        
-        var tag = (this.offsetHeight << 16) + this.offsetWidth;
+    this.onmeasure = function () {
 
-        if (this.__size_tag !== tag)
-        {
-            this.__size_tag = tag;
-            tag = true;
-        }
-        else
-        {
-            tag = this.__arrange_dirty > 1;
-        }
+        var autoWidth = this.__auto_width,
+            autoHeight = this.__auto_height;
 
-        if (tag)
+        if (autoWidth || autoHeight)
         {
-            this.__arrange_dirty = 0;
-            arrange(this);
-        }
-
-        if (auto)
-        {
-            if (auto & 1)
-            {
-                this.offsetWidth = this.arrangeRight + this.borderLeft + this.borderRight + this.paddingRight;
-            }
-            
-            if (auto & 2)
-            {
-                this.offsetHeight = this.arrangeBottom + this.borderTop + this.borderBottom + this.paddingBottom;
-            }
+            this.renderer.__measure_auto(this, autoWidth, autoHeight);
         }
         else
         {
@@ -135,81 +112,6 @@ flyingon.Control.extend('Box', function (base) {
         }
     };
 
-
-    function arrange(control) {
-
-        var x = control.paddingLeft,
-            y = control.paddingTop,
-            width = control.offsetWidth - x - control.borderLeft - control.borderRight - control.paddingRight,
-            height = control.offsetHeight - y - control.borderTop - control.borderBottom - control.paddingBottom;
-
-        control.arrangeRight = control.arrangeBottom = 0;
-
-        if (control.vertical())
-        {
-            control.__arrange_vertical(x, y, width, height);
-        }
-        else
-        {
-            control.__arrange(x, y, width, height);
-        }
-    };
-
-
-    this.__arrange = function (x, y, width, height) {
-
-        var left = x,
-            right = x + width,
-            control;
-        
-        //先按无滚动条的方式排列
-        for (var i = 0, l = this.length; i < l; i++)
-        {
-            control = this[i];
-
-            if (control.__visible)
-            {
-                if (control.__new_line)
-                {
-                    x = left;
-                    y = this.arrangeBottom;
-
-                    control.measure(width, height, width, height, 1);
-                    right = x + width;
-                }
-                else
-                {
-                    control.measure(width, height, right - x || -1, height);
-                }
-
-                control.locate(x, y, 0, height, this);
-
-                x = this.arrangeX;
-            }
-        }
-    };
-
-
-    this.__arrange_vertical = function () {
-
-        var bottom = y + height,
-            control;
-        
-        //先按无滚动条的方式排列
-        for (var i = 0, l = this.length; i < l; i++)
-        {
-            control = this[i];
-
-            if (control.__visible)
-            {
-                control.measure(width, height, width, bottom - height || -1, 1);
-                control.locate(x, y, width, 0, this);
-
-                y = this.arrangeY;
-            }
-        }
-    };
-
-
+    
 
 }).register();

@@ -780,11 +780,11 @@ var flyingon;
      * @param {object=} attributes 属性参数 { dataType: string, check: function, set: function }
      * @return {function} 属性函数
      */
-    function defineProperty(name, defaultValue, attributes) {
+    function defineProperty(name, defaultValue, attributes, check) {
 
         var fn, any;
 
-        if (!/^[a-z][\w$]*$/.test(name))
+        if (check !== false && !/^[a-z][\w$]*$/.test(name))
         {
             throw 'property name "' + name + '" is not legal!';
         }

@@ -1,0 +1,38 @@
+
+[
+    
+    {
+        source: [
+            '../../less/color.less',
+            '../../less/base.less',
+            '../../less/listbox.less',
+            '../../less/calendar.less',
+            '../../less/slider.less',
+            '../../less/progressbar.less',
+            '../../less/tree.less',
+            '../../less/grid.less',
+            '../../less/groupbox.less',
+            '../../less/pagination.less',
+            '../../less/tab.less',
+            '../../less/dialog.less',
+            '../../less/popup.less',
+            '../../less/tooltip.less',
+            '../../less/box.less',
+            '../../less/message.less',
+            '../../less/menu.less'
+        ],
+
+        output: 'flyingon.css',
+        
+        plugins: [
+            {
+                name: './webminify_css',
+				options: {
+					less: true,
+					compress: false
+				}
+            }
+        ]
+    }
+
+]
