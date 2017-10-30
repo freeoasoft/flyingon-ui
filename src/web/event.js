@@ -34,16 +34,16 @@ flyingon.MouseEvent = flyingon.Event.extend(function () {
         }
         
         //包含滚动距离的偏移位置
-        //this.pageX = event.pageX;
-        //this.pageY = event.pageY;
+        this.pageX = event.pageX;
+        this.pageY = event.pageY;
 
         //不包含滚动距离的偏移位置
         this.clientX = event.clientX;
         this.clientY = event.clientY;
 
         //相对屏幕左上角的偏移位置
-        //this.screenX = event.screenX;
-        //this.screenY = event.screenY;
+        this.screenX = event.screenX;
+        this.screenY = event.screenY;
 
     };
 
@@ -82,6 +82,39 @@ flyingon.KeyEvent = flyingon.Event.extend(function () {
 
         //键码
         this.which = event.which || event.charCode || event.keyCode;
+
+    };
+
+    
+});
+
+
+
+/**
+ * 触控事件
+ */
+flyingon.TouchEvent = flyingon.Event.extend(function () {
+
+
+    this.init = function (event) {
+
+        //关联的原始dom事件
+        this.original_event = event;
+
+        //事件类型
+        this.type = event.type;
+
+        //事件触发时间
+        //this.timeStamp = event.timeStamp;
+
+        //当前跟踪的触摸操作的touch对象的数组
+        this.touches = event.touches;
+
+        //特定于事件目标的Touch对象的数组
+        this.targetTouches = event.targetTouches;
+
+        //自上次触摸以来发生了什么改变的Touch对象的数组
+        this.changeTouches = event.changeTouches;
 
     };
 

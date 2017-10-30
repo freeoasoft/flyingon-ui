@@ -41,6 +41,8 @@
     var MouseEvent = flyingon.MouseEvent;
         
     var KeyEvent = flyingon.KeyEvent;
+
+    var TouchEvent = flyingon.TouchEvent;
     
     var on = flyingon.dom_on;
     
@@ -160,6 +162,18 @@
         if (control && !((any = control.__storage) && any.disabled))
         {
             control.trigger(new KeyEvent(e));
+        }
+    };
+
+
+    function touch_event(e) {
+
+        var control = flyingon.findControl(e.target),
+            any;
+        
+        if (control && !((any = control.__storage) && any.disabled))
+        {
+            control.trigger(new TouchEvent(e));
         }
     };
     
@@ -474,6 +488,15 @@
     on(document, 'keypress', key_event);
     
     on(document, 'keyup', key_event);
+
+
+    on(document, 'touchstart', touch_event);
+
+    on(document, 'touchmove', touch_event);
+
+    on(document, 'touchend', touch_event);
+
+    on(document, 'touchcancel', touch_event);
 
 
     on(document, 'contextmenu', function (e) {

@@ -18,11 +18,12 @@ flyingon是一个100%使用原生javascript开发的前端开发库
 3. 基础控件(Button, TextBox, ComboBox, Date...)
 4. 高级控件(Tree, Grid, TreeGrid...)
 
+![](https://www.travis-ci.org/freeoasoft/flyingon-ui.svg?branch=master)
 
 浏览器支持：IE8+ chrome2+ Firefox3+ Safari5+ Opera11+
 
 
-[在线演示](https://freeoasoft.github.io/flyingon/samples/index.html)(注:因为github的缘故,有时会出现卡顿或无法访问, 请耐心等待或下载示例到本地运行samples目录下的index.html)
+[在线演示](https://freeoasoft.github.io/flyingon-ui/samples/index.html)(注:因为github的缘故,有时会出现卡顿或无法访问, 请耐心等待或下载示例到本地运行samples目录下的index.html)
 
 
 自适应布局展示:
@@ -50,6 +51,6 @@ flyingon是一个100%使用原生javascript开发的前端开发库
     
 
 
-更多信息请参考其它文档或[在线演示](https://freeoasoft.github.io/flyingon/samples/index.html)
+更多信息请参考其它文档或[在线演示](https://freeoasoft.github.io/flyingon-ui/samples/index.html)
 
 

@@ -6851,16 +6851,16 @@ flyingon.MouseEvent = flyingon.Event.extend(function () {
         }
         
         //包含滚动距离的偏移位置
-        //this.pageX = event.pageX;
-        //this.pageY = event.pageY;
+        this.pageX = event.pageX;
+        this.pageY = event.pageY;
 
         //不包含滚动距离的偏移位置
         this.clientX = event.clientX;
         this.clientY = event.clientY;
 
         //相对屏幕左上角的偏移位置
-        //this.screenX = event.screenX;
-        //this.screenY = event.screenY;
+        this.screenX = event.screenX;
+        this.screenY = event.screenY;
 
     };
 
@@ -6899,6 +6899,60 @@ flyingon.KeyEvent = flyingon.Event.extend(function () {
 
         //键码
         this.which = event.which || event.charCode || event.keyCode;
+
+    };
+
+    
+});
+
+
+
+/**
+ * 触控事件
+ */
+flyingon.TouchEvent = flyingon.Event.extend(function () {
+
+
+    this.init = function (event) {
+
+        //关联的原始dom事件
+        this.original_event = event;
+
+        //事件类型
+        this.type = event.type;
+
+        //事件触发时间
+        //this.timeStamp = event.timeStamp;
+
+        //标识触摸的唯一ID
+        this.identifier = event.identifier;
+
+        //触摸目标在视口中的x坐标
+        this.clientX = event.clientX;
+        
+        //触摸目标在视口中的y坐标
+        this.clientY = event.clientY;
+
+        //触摸目标在页面中的x坐标
+        this.pageX = event.pageX;
+
+        //触摸目标在页面中的y坐标
+        this.pageY = event.pageY;
+
+        //触摸目标在屏幕中的x坐标
+        this.screenX = event.screenX;
+
+        //触摸目标在屏幕中的y坐标
+        this.screenY = event.screenY;
+
+        //当前跟踪的触摸操作的touch对象的数组
+        this.touches = event.touches;
+
+        //特定于事件目标的Touch对象的数组
+        this.targetTouches = event.targetTouches;
+
+        //自上次触摸以来发生了什么改变的Touch对象的数组
+        this.changeTouches = event.changeTouches;
 
     };
 
@@ -29215,6 +29269,8 @@ flyingon.view.Template = Object.extend(function () {
     var MouseEvent = flyingon.MouseEvent;
         
     var KeyEvent = flyingon.KeyEvent;
+
+    var TouchEvent = flyingon.TouchEvent;
     
     var on = flyingon.dom_on;
     
@@ -29334,6 +29390,18 @@ flyingon.view.Template = Object.extend(function () {
         if (control && !((any = control.__storage) && any.disabled))
         {
             control.trigger(new KeyEvent(e));
+        }
+    };
+
+
+    function touch_event(e) {
+
+        var control = flyingon.findControl(e.target),
+            any;
+        
+        if (control && !((any = control.__storage) && any.disabled))
+        {
+            control.trigger(new TouchEvent(e));
         }
     };
     
@@ -29648,6 +29716,15 @@ flyingon.view.Template = Object.extend(function () {
     on(document, 'keypress', key_event);
     
     on(document, 'keyup', key_event);
+
+
+    on(document, 'touchstart', touch_event);
+
+    on(document, 'touchmove', touch_event);
+
+    on(document, 'touchend', touch_event);
+
+    on(document, 'touchcancel', touch_event);
 
 
     on(document, 'contextmenu', function (e) {
