@@ -5,7 +5,8 @@
   "main": "js/flyingon.js",
   "typings": "typings/flyingon.d.ts",
   "scripts": {
-    "test": "karma start"
+    "test": "karma start",
+    "dev": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "karma": "^1.7.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.1",
-    "karma-jasmine": "^1.1.0"
+    "karma-jasmine": "^1.1.0",
+    "webminify": "1.1.6"
   }
 }

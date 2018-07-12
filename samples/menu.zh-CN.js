@@ -1,10 +1,10 @@
-var url_base = 'flyingon-ui/samples/base/';
+var url_base = 'samples/base/';
 
-var url_layout = 'flyingon-ui/samples/layout/';
+var url_layout = 'samples/layout/';
 
-var url_controls = 'flyingon-ui/samples/controls/';
+var url_controls = 'samples/controls/';
 
-var url_grid = 'flyingon-ui/samples/grid/';
+var url_grid = 'samples/grid/';
 
 
 var menuList = [

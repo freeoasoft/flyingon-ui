@@ -21,7 +21,7 @@ flyingon.renderer('Highlight', function (base) {
 
         if (!styles[value])
         {
-            flyingon.link(flyingon.require.path('flyingon-ui/third/highlight/styles/' + value + '.css'));
+            flyingon.link(flyingon.require.path('third/highlight/styles/' + value + '.css'));
         }
     };
 
@@ -54,7 +54,7 @@ flyingon.renderer('Highlight', function (base) {
             cache = [control];
 
             this.theme(control, view, control.theme());
-            flyingon.script(flyingon.require.path('flyingon-ui/third/highlight/highlight.js'), init);
+            flyingon.script(flyingon.require.path('third/highlight/highlight.js'), init);
         }
     };
         

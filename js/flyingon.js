@@ -6924,27 +6924,6 @@ flyingon.TouchEvent = flyingon.Event.extend(function () {
         //事件触发时间
         //this.timeStamp = event.timeStamp;
 
-        //标识触摸的唯一ID
-        this.identifier = event.identifier;
-
-        //触摸目标在视口中的x坐标
-        this.clientX = event.clientX;
-        
-        //触摸目标在视口中的y坐标
-        this.clientY = event.clientY;
-
-        //触摸目标在页面中的x坐标
-        this.pageX = event.pageX;
-
-        //触摸目标在页面中的y坐标
-        this.pageY = event.pageY;
-
-        //触摸目标在屏幕中的x坐标
-        this.screenX = event.screenX;
-
-        //触摸目标在屏幕中的y坐标
-        this.screenY = event.screenY;
-
         //当前跟踪的触摸操作的touch对象的数组
         this.touches = event.touches;
 
@@ -29892,7 +29871,7 @@ flyingon.renderer('Highlight', function (base) {
 
         if (!styles[value])
         {
-            flyingon.link(flyingon.require.path('flyingon-ui/third/highlight/styles/' + value + '.css'));
+            flyingon.link(flyingon.require.path('third/highlight/styles/' + value + '.css'));
         }
     };
 
@@ -29925,7 +29904,7 @@ flyingon.renderer('Highlight', function (base) {
             cache = [control];
 
             this.theme(control, view, control.theme());
-            flyingon.script(flyingon.require.path('flyingon-ui/third/highlight/highlight.js'), init);
+            flyingon.script(flyingon.require.path('third/highlight/highlight.js'), init);
         }
     };
         
