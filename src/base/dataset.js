@@ -55,6 +55,7 @@ flyingon.RowCollection = Object.extend._(function () {
         var writer = ['['],
             row,
             data,
+            state,
             tag,
             any;
         
@@ -81,13 +82,28 @@ flyingon.RowCollection = Object.extend._(function () {
                     tag = true;
                 }
                 
+                switch (row.state)
+                {
+                    case 'add':
+                        state = '"@":1';
+                        break;
+
+                    case 'change':
+                        state = '"@":2';
+                        break;
+
+                    default:
+                        state = '';
+                        break;
+                }
+
                 if (change && (any = row.originalData))
                 {
-                    write_change(writer, data, any, names, this.tables);
+                    write_change(writer, data, any, names, this.tables, state);
                 }
                 else
                 {
-                    write_object(writer, data);
+                    write_object(writer, data, state);
                 }
             }
         }
@@ -98,21 +114,24 @@ flyingon.RowCollection = Object.extend._(function () {
     };
     
     
-    function write_object(writer, data) {
-        
-        var tag;
+    function write_object(writer, data, state) {
         
         writer.push('{');
+
+        if (state)
+        {
+            writer.push(state);
+        }
         
         for (var name in data)
         {
-            if (tag)
+            if (state)
             {
                 writer.push(',');
             }
             else
             {
-                tag = true;
+                state = true;
             }
             
             writer.push('"', name, '":');
@@ -177,11 +196,11 @@ flyingon.RowCollection = Object.extend._(function () {
     };
     
     
-    function write_change(writer, data, originalData, names, tables) {
+    function write_change(writer, data, originalData, names, tables, state) {
         
         var value, oldValue;
         
-        writer.push('{');
+        writer.push(state);
         
         for (var name in data)
         {
@@ -192,14 +211,14 @@ flyingon.RowCollection = Object.extend._(function () {
             {
                 if (value == null)
                 {
-                    writer.push('"', name, '":null', ',');
+                    writer.push(',"', name, '":null');
                     continue;
                 }
                 
                 switch (typeof value)
                 {
                     case 'string':
-                        writer.push('"', name, '":"', value.replace(/"/g, '\\"'), '"', ',');
+                        writer.push(',"', name, '":"', value.replace(/"/g, '\\"'), '"');
                         break;
 
                     case 'object':
@@ -209,12 +228,12 @@ flyingon.RowCollection = Object.extend._(function () {
                             
                             if (oldValue.length > 2)
                             {
-                                writer.push('"', name, '":', oldValue, ',');
+                                writer.push(',"', name, '":', oldValue);
                             }
                         }
                         else 
                         {
-                            writer.push('"', name, '":');
+                            writer.push(',"', name, '":');
                             
                             if (value instanceof Array)
                             {
@@ -228,19 +247,17 @@ flyingon.RowCollection = Object.extend._(function () {
                             {
                                 write_object(writer, value);
                             }
-                            
-                            writer.push(',');
                         }
                         break;
 
                     default:
-                        writer.push('"', name, '":', value, ',');
+                        writer.push(',"', name, '":', value);
                         break;
                 }
             }
         }
         
-        writer.push(writer.pop() === ',' ? '}' : '{}');
+        writer.push('}');
     };
     
     
@@ -259,12 +276,12 @@ flyingon.fragment('f-dataset', function () {
      * @return {object} 当前实例对象
      */
     this.load = function (list) {
-        
+
+        var dataset = this.dataset,
+            parent = dataset ? this : null;
+
         if (list && list.length > 0)
         {
-            var dataset = this.dataset,
-                parent = dataset ? this : null;
-
             dataset = dataset || this;
         
             dataset.__new_id = load_data(dataset, 
@@ -273,10 +290,10 @@ flyingon.fragment('f-dataset', function () {
                 dataset.primaryKey, 
                 dataset.childrenName, 
                 dataset.__new_id++);
-            
-            dataset.trigger('load', 'parent', parent);
         }
         
+        dataset.trigger('load', 'parent', parent);
+
         return this;
     };
     

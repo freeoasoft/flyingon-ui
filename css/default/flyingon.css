@@ -1,22 +1,10 @@
 .f-back,
 .f-hover-back:hover,
 .f-toolbar {
-  background-color: #EFF5FF;
-  background: -webkit-linear-gradient(top, #EFF5FF 0, #E0ECFF 100%);
-  background: -moz-linear-gradient(top, #EFF5FF 0, #E0ECFF 100%);
-  background: -o-linear-gradient(top, #EFF5FF 0, #E0ECFF 100%);
-  background: linear-gradient(to bottom, #EFF5FF 0, #E0ECFF 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF, endColorstr=#E0ECFF, GradientType=0);
+  background-color: white;
 }
 .f-selected-back {
   background-color: white;
-  background: -webkit-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: -moz-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: -o-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: linear-gradient(to bottom, #EFF5FF 0, white 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF, endColorstr=white, GradientType=0);
 }
 body,
 input {
@@ -26,7 +14,7 @@ span {
   vertical-align: middle;
 }
 .f-border {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-input {
   background-color: white;
@@ -90,7 +78,7 @@ span {
 .f-textbutton {
   position: relative;
   display: inline-block;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   overflow: hidden;
   width: 150px;
   height: 25px;
@@ -120,8 +108,8 @@ span {
   overflow: hidden;
 }
 .f-textbox-button:hover {
-  border: 1px solid #95B8E7;
-  background-color: #EFF5FF;
+  border: 1px solid silver;
+  background-color: white;
 }
 .f-textbox-icon {
   position: absolute;
@@ -194,15 +182,15 @@ span {
   margin-top: -8px;
 }
 .f-icon:hover {
-  border: 1px solid #95B8E7;
-  background-color: #EFF5FF;
+  border: 1px solid silver;
+  background-color: white;
 }
 .f-image {
   width: 400px;
   height: 300px;
 }
 .f-toolbar {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-overlay {
   position: fixed;
@@ -237,7 +225,7 @@ span {
   background: url(loading.gif) no-repeat;
 }
 .f-listbox {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   overflow: auto;
 }
 .f-listbox-selected {
@@ -267,7 +255,7 @@ span {
   font-style: italic;
 }
 .f-calendar {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   background-color: white;
 }
 .f-calendar-head {
@@ -304,7 +292,7 @@ span {
 }
 .f-calendar-line {
   height: 1px;
-  background-color: #95B8E7;
+  background-color: silver;
 }
 .f-calendar-disabled {
   color: darkgray;
@@ -423,7 +411,7 @@ span {
   right: 0;
   top: 50%;
   margin-top: -2px;
-  background-color: #95B8E7;
+  background-color: silver;
 }
 .f-slider-button {
   position: absolute;
@@ -433,7 +421,7 @@ span {
   top: 50%;
   margin-top: -8px;
   cursor: pointer;
-  background-color: #95B8E7;
+  background-color: silver;
 }
 .f-slider-bar div,
 .f-slider-button div {
@@ -442,10 +430,10 @@ span {
   top: 1px;
   right: 1px;
   bottom: 1px;
-  background-color: #EFF5FF;
+  background-color: white;
 }
 .f-progressbar {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-progressbar-back {
   position: absolute;
@@ -453,7 +441,7 @@ span {
   top: 0;
   bottom: 0;
   height: auto;
-  background-color: #EFF5FF;
+  background-color: white;
 }
 .f-progressbar-text {
   position: absolute;
@@ -467,7 +455,7 @@ span {
 }
 .f-tree {
   overflow: auto;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   padding: 2px;
   background-color: white;
 }
@@ -581,14 +569,14 @@ span {
 }
 .f-grid,
 .f-grid-group-cell {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-grid {
   background-color: white;
 }
 .f-grid-resize-thumb,
 .f-grid-group-line {
-  background-color: #95B8E7;
+  background-color: silver;
 }
 .f-grid-group-box,
 .f-grid-column-head,
@@ -601,7 +589,7 @@ span {
 .f-grid-group,
 .f-grid-cell {
   border-style: solid;
-  border-color: #95B8E7;
+  border-color: silver;
 }
 .f-grid-column-head .f-textbox,
 .f-grid-cell,
@@ -610,16 +598,16 @@ span {
   background-color: white;
 }
 .f-grid-body .f-grid-checked {
-  background-color: #F5F5FF;
+  background-color: white;
 }
 .f-grid-group-box,
 .f-grid-left .f-grid-cell,
 .f-grid-right .f-grid-cell {
-  background-color: #F8F8F8;
+  background-color: white;
 }
 .f-grid-body .f-grid-current,
 .f-grid-body .f-grid-column-no {
-  background-color: #EFF5FF;
+  background-color: white;
 }
 .f-grid-head .f-grid-cell,
 .f-grid-head .f-grid-left,
@@ -628,11 +616,11 @@ span {
 .f-grid-column-head,
 .f-grid-group-cell,
 .f-grid-no {
-  background-color: #EFF5FF;
+  background-color: white;
 }
 .f-grid-group-box .f-information {
   font-size: 14px;
-  background-color: #F8F8F8;
+  background-color: white;
   color: darkgray;
 }
 .f-grid-head .f-grid-cell.f-textbox,
@@ -847,7 +835,7 @@ span {
 }
 .f-groupbox {
   overflow: hidden;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-groupbox-head,
 .f-groupbox-body {
@@ -869,7 +857,7 @@ span {
   -ms-box-sizing: border-box;
   box-sizing: border-box;
   *behavior: url(../css/box-sizing.htc);
-  border-bottom: 1px solid #95B8E7;
+  border-bottom: 1px solid silver;
   padding: 0 4px;
   cursor: default;
   z-index: 1;
@@ -900,7 +888,7 @@ span {
   background: url(flyingon.png) no-repeat -63px -15px;
 }
 .f-pagination {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-page-first {
   background: url(flyingon.png) no-repeat -14px -124px;
@@ -920,22 +908,16 @@ span {
 .f-tab {
   position: relative;
   overflow: hidden;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-tab-head {
-  background-color: #EFF5FF;
+  background-color: white;
 }
 .f-tab-line {
-  background-color: #95B8E7;
+  background-color: silver;
 }
 .f-tab-selected {
   background-color: white;
-  background: -webkit-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: -moz-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: -o-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: linear-gradient(to bottom, #EFF5FF 0, white 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF, endColorstr=white, GradientType=0);
 }
 .f-tab-direction-top .f-tab-selected {
   border-bottom-color: white;
@@ -982,7 +964,7 @@ span {
   display: inline-block;
   overflow: hidden;
   margin: 0;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   padding: 0 8px;
   width: auto;
   height: auto;
@@ -1060,7 +1042,7 @@ span {
   bottom: -1px;
 }
 .f-tab-move {
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
 }
 .f-tab-move-icon {
   position: absolute;
@@ -1114,7 +1096,7 @@ span {
 }
 .f-dialog {
   position: absolute;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   overflow: hidden;
   z-index: 99;
   background-color: white;
@@ -1140,13 +1122,7 @@ span {
 .f-dialog-head {
   padding: 0 4px;
   cursor: default;
-  background-color: #EFF5FF;
-  background: -webkit-linear-gradient(top, #EFF5FF 0, #E0ECFF 100%);
-  background: -moz-linear-gradient(top, #EFF5FF 0, #E0ECFF 100%);
-  background: -o-linear-gradient(top, #EFF5FF 0, #E0ECFF 100%);
-  background: linear-gradient(to bottom, #EFF5FF 0, #E0ECFF 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF, endColorstr=#E0ECFF, GradientType=0);
+  background-color: white;
 }
 .f-dialog-body {
   padding: 2px;
@@ -1156,17 +1132,11 @@ span {
 }
 .f-dialog-active .f-dialog-head {
   background-color: white;
-  background: -webkit-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: -moz-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: -o-linear-gradient(top, #EFF5FF 0, white 100%);
-  background: linear-gradient(to bottom, #EFF5FF 0, white 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#EFF5FF, endColorstr=white, GradientType=0);
 }
 .f-dialog-line {
   top: auto;
   height: 1px;
-  background-color: #95B8E7;
+  background-color: silver;
 }
 .f-dialog-icon {
   display: inline-block;
@@ -1187,7 +1157,7 @@ span {
 }
 .f-popup {
   position: absolute;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   width: auto;
   height: auto;
   z-index: 100;
@@ -1203,7 +1173,7 @@ span {
 .f-tooltip-body {
   border-radius: 5px;
   padding: 6px 8px;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   background-color: white;
 }
 .f-tooltip-left {
@@ -1229,7 +1199,7 @@ span {
   right: -6px;
   top: 50%;
   margin-top: -6px;
-  border-left-color: #95B8E7;
+  border-left-color: silver;
 }
 .f-tooltip-left .f-tooltip-arrow2 {
   right: -5px;
@@ -1241,7 +1211,7 @@ span {
   left: -6px;
   top: 50%;
   margin-top: -6px;
-  border-right-color: #95B8E7;
+  border-right-color: silver;
 }
 .f-tooltip-right .f-tooltip-arrow2 {
   left: -5px;
@@ -1253,7 +1223,7 @@ span {
   bottom: -6px;
   left: 50%;
   margin-left: -6px;
-  border-top-color: #95B8E7;
+  border-top-color: silver;
 }
 .f-tooltip-top .f-tooltip-arrow2 {
   bottom: -5px;
@@ -1265,7 +1235,7 @@ span {
   top: -6px;
   left: 50%;
   margin-left: -6px;
-  border-bottom-color: #95B8E7;
+  border-bottom-color: silver;
 }
 .f-tooltip-bottom .f-tooltip-arrow2 {
   top: -5px;
@@ -1328,7 +1298,7 @@ span {
 }
 .f-message-foot {
   text-align: center;
-  background-color: #EFF5FF;
+  background-color: white;
 }
 .f-message-foot button {
   margin: 0 4px;
@@ -1347,7 +1317,7 @@ span {
 }
 .f-menu {
   position: absolute;
-  border: 1px solid #95B8E7;
+  border: 1px solid silver;
   padding: 2px;
   min-width: 150px;
   z-index: 100;

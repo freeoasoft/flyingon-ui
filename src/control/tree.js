@@ -151,7 +151,6 @@ flyingon.Control.extend('Tree', function (base) {
     //default   默认风格
     //blue      蓝色风格
     //plus      加减风格
-    //line      线条风格
     this.defineProperty('theme', 'default', {
 
         set: this.render   

@@ -1,5 +1,0 @@
-{
-    "files": ["flyingon.js"],   //包含注释的源文件列表
-    "doc": "../doc",            //生成文档的目录(注:每次生成前会清空目录)
-    "tsd": "flyingon.d.ts"      //tsd文件路径
-}
