@@ -200,7 +200,7 @@ flyingon.RowCollection = Object.extend._(function () {
         
         var value, oldValue;
         
-        writer.push(state);
+        writer.push('{', state);
         
         for (var name in data)
         {

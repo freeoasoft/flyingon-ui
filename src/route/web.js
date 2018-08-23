@@ -4,15 +4,8 @@
 
     var callback = [];
 
-    var hash = location.hash.replace(/^[#!]+/, '');
+    var hash;
 
-    
-    //打开页面有hash时需处理
-    if (callback.hash = hash)
-    {
-        //预加载插件资源
-        flyingon.route.preload(hash);
-    }
 
 
     //侦听路由变化

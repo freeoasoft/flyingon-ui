@@ -3706,7 +3706,7 @@ flyingon.RowCollection = Object.extend._(function () {
         
         var value, oldValue;
         
-        writer.push(state);
+        writer.push('{', state);
         
         for (var name in data)
         {
@@ -6987,9 +6987,6 @@ flyingon.Ajax = flyingon.Async.extend(function () {
     //是否支持跨域资源共享(CORS)
     this.CORS = false;
     
-    //jsonp回调名称
-    this.jsonp = 'jsonp';
-    
     //超时时间
     this.timeout = 0;
     
@@ -7042,8 +7039,6 @@ flyingon.Ajax = flyingon.Async.extend(function () {
             data = null;
         }
         
-        any = this.dataType === 'jsonp';
-        
         if (this.version)
         {
             list.push('ajax-version=', this.version);
@@ -7054,17 +7049,7 @@ flyingon.Ajax = flyingon.Async.extend(function () {
             list.start = url.indexOf('?') >= 0 ? '&' : '?';
         }
 
-        //jsonp
-        if (any)
-        {
-            any = get ? jsonp_get : jsonp_post;
-        }
-        else
-        {
-            any = ajax_send;
-        }
-        
-        any(this, url, list, data);
+        ajax_send(this, url, list, data);
 
         return this;
     };
@@ -7149,26 +7134,24 @@ flyingon.Ajax = flyingon.Async.extend(function () {
 
             if (xhr.status < 300)
             {
-                try
+                switch (self.dataType)
                 {
-                    switch (self.dataType)
-                    {
-                        case 'json':
-                            self.resolve(flyingon.parseJSON(xhr.responseText));
-                            break;
-                            
-                        case 'xml':
-                            self.resolve(xhr.responseXML);
-                            break;
-                            
-                        default:
-                            self.resolve(xhr.responseText);
-                            break;
-                    }
+                    case 'json':
+                        self.resolve(flyingon.parseJSON(xhr.responseText));
+                        break;
+                        
+                    case 'xml':
+                        self.resolve(xhr.responseXML);
+                        break;
+                        
+                    default:
+                        self.resolve(xhr.responseText);
+                        break;
                 }
-                catch (e)
+
+                if (self.__error)
                 {
-                    self.reject(e);
+                    throw self.__error;
                 }
             }
             else
@@ -7203,154 +7186,6 @@ flyingon.Ajax = flyingon.Async.extend(function () {
             }
         }
     };
-        
-    
-    //jsonp_get
-    function jsonp_get(self, url, list) {
-        
-        var target = jsonp_get,
-            any = target.cache || (target.cache = []),
-            name = any.pop() || 'flyingon_callback' + (++target.id || (target.id = 1));
-        
-        window[name] = function (data) {
-        
-            self.resolve(data);
-            ajax_end(self, url);
-        };
-        
-        list.push(self.jsonp || 'jsonp', '=', name);
-        
-        if (!self.version)
-        {
-            list.push('jsonp-version=' + (++target.version || (target.version = 1)));
-        }
-        
-        flyingon.script(url = url + list.start + list.join('&'), function (src, error) {
-            
-            any.push(name);
-
-            if (error)
-            {
-                self.reject(error);
-                ajax_end(self, url, error);
-            }
-
-            window[name] = void 0;
-            this.parentNode.removeChild(this);
-            
-            self = null;
-        });
-    };
-    
-    
-    //jsonp_post
-    function jsonp_post(self, url, list, data) {
-                
-        var iframe = jsonp_iframe(),
-            flag;
-        
-        //处理url
-        list.push('jsonp=post');
-        url = url + list.start + list.join('&');
-                    
-        function load() {
-          
-            if (flag)
-            {
-                //IE67可能需要设置成同源的url才能取值
-                this.contentWindow.location = 'about:blank';
-
-                jsonp_end(self, url, this.contentWindow.name);
-                jsonp_iframe(this);
-
-                flyingon.dom_off(this, 'load', load);
-                self = iframe = list = data = null;
-            }
-            else
-            {
-                flag = 1;
-                
-                //解决IE6在新窗口打开的BUG
-                this.contentWindow.name = this.name; 
-
-                //动态生成表单提交数据
-                jsonp_form(this, url, data, self.method);
-            }
-        };
-        
-        //IE6不能触发onload事件, 如果要兼容ie6, 需要使用attachEvent绑定事件
-        flyingon.dom_on(iframe, 'load', load);
-        
-        iframe.src = 'about:blank';
-        document.head.appendChild(iframe);
-    };
-    
-    
-    //获取或缓存iframe
-    function jsonp_iframe(iframe) {
-        
-        var any = jsonp_iframe.cache || (jsonp_iframe.cache = []);
-        
-        if (iframe)
-        {
-            any.push(iframe);
-            iframe.parentNode.removeChild(iframe);
-        }
-        else
-        {
-            iframe = any.pop();
-            
-            if (!iframe)
-            {
-                iframe = document.createElement('iframe');
-                iframe.name = 'jsonp-iframe';
-            }
-            
-            return iframe;
-        }
-    };
-    
-
-    //生成jsonp提交表单
-    function jsonp_form(iframe, url, data, method) {
-        
-        var array = ['<form id="form" enctype="application/x-www-form-urlencoded"'];
-        
-        array.push(' action="', url, '" method="', 'GET', '">'); //method || 'POST'
-        
-        for (var name in data)
-        {
-            array.push('<input type="hidden" name="', name, '"');
-            
-            if (typeof (name = data[name]) === 'string')
-            {
-                name = name.replace(/"/g, '\\"');
-            }
-            
-            array.push(' value="', name, '" />');
-        }
-        
-        array.push('</form>', '<script>form.submit();</script>');
-        
-        iframe.contentWindow.document.write(array.join(''));
-    };
-    
-
-    //jsonp返回结果处理
-    function jsonp_end(self, url, text) {
-
-        try
-        {
-            self.resolve(flyingon.parseJSON(text));
-            ajax_end(self, url);
-        }
-        catch (e)
-        {
-            self.reject(e);
-            ajax_end(self, url, e);
-        }
-    };
-
     
 
 }).statics(function (Ajax) {
@@ -7382,28 +7217,6 @@ flyingon.Ajax = flyingon.Async.extend(function () {
     flyingon.ajaxPost = function (url, options) {
 
         options = options || {};
-        options.method = 'POST';
-
-        return new Ajax().send(url, options);
-    };
-
-
-    //jsonp get提交
-    flyingon.jsonp = function (url, options) {
-
-        options = options || {};
-        options.dataType = 'jsonp';
-
-        return new Ajax().send(url, options);
-    };
-
-
-    //jsonp post提交
-    //服务器需返回 <script>window.name = 'xxx';</script> 形式的内容且不能超过2M大小
-    flyingon.jsonpPost = function (url, options) {
-
-        options = options || {};
-        options.dataType = 'jsonp';
         options.method = 'POST';
 
         return new Ajax().send(url, options);
@@ -8521,15 +8334,8 @@ flyingon.Ajax = flyingon.Async.extend(function () {
 
     var callback = [];
 
-    var hash = location.hash.replace(/^[#!]+/, '');
+    var hash;
 
-    
-    //打开页面有hash时需处理
-    if (callback.hash = hash)
-    {
-        //预加载插件资源
-        flyingon.route.preload(hash);
-    }
 
 
     //侦听路由变化
@@ -21246,6 +21052,52 @@ flyingon.Control.extend('Tree', function (base) {
     this.__create_child = flyingon.TreeNode.prototype.__create_child;
 
 
+
+    this.load = function (array, idKey, parentIdKey, primaryValue) {
+
+        var keys = Object.create(null),
+            list = [0, this.length],
+            index = 0,
+            item,
+            cache,
+            any;
+    
+        idKey = idKey || 'id';
+        parentIdKey = parentIdKey || 'parentId';
+        primaryValue = primaryValue || 0;
+    
+        while (item = array[index++])
+        {
+            keys[item[idKey]] = item;
+        }
+    
+        index = 0;
+    
+        while (item = array[index++])
+        {
+            any = item[parentIdKey];
+    
+            if (cache = keys[any])
+            {
+                if (any = cache.children)
+                {
+                    any.push(item);
+                }
+                else
+                {
+                    cache.children = [item];
+                }
+            }
+            else
+            {
+                list.push(item);
+            }
+        }
+    
+        this.splice.apply(this, list);
+    }
+    
+    
 
     //展开节点
     this.expand = function (node) {

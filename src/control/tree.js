@@ -190,6 +190,52 @@ flyingon.Control.extend('Tree', function (base) {
 
 
 
+    this.load = function (array, idKey, parentIdKey, primaryValue) {
+
+        var keys = Object.create(null),
+            list = [0, this.length],
+            index = 0,
+            item,
+            cache,
+            any;
+    
+        idKey = idKey || 'id';
+        parentIdKey = parentIdKey || 'parentId';
+        primaryValue = primaryValue || 0;
+    
+        while (item = array[index++])
+        {
+            keys[item[idKey]] = item;
+        }
+    
+        index = 0;
+    
+        while (item = array[index++])
+        {
+            any = item[parentIdKey];
+    
+            if (cache = keys[any])
+            {
+                if (any = cache.children)
+                {
+                    any.push(item);
+                }
+                else
+                {
+                    cache.children = [item];
+                }
+            }
+            else
+            {
+                list.push(item);
+            }
+        }
+    
+        this.splice.apply(this, list);
+    }
+    
+    
+
     //展开节点
     this.expand = function (node) {
 
